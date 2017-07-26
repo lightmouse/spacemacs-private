@@ -130,7 +130,7 @@
 
 (spacemacs/set-leader-keys "rh" 'helm-resume)
 (spacemacs/set-leader-keys "sj" 'counsel-imenu)
-
+(spacemacs/set-leader-keys "rs" 'replace-string)
 ;; ivy specific keybindings
 (if (configuration-layer/layer-usedp 'ivy)
     (progn
@@ -178,3 +178,5 @@
   (global-set-key (kbd "s-n") 'make-frame)
   (global-set-key (kbd "s-z") 'undo-tree-undo)
   (global-set-key (kbd "s-Z") 'undo-tree-redo))
+(global-set-key (kbd "M-z") 'evil-jump-backward)
+(global-set-key (kbd "M-x") 'etags-select-find-tag-at-point)

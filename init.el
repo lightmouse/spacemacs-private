@@ -31,7 +31,6 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
-     helm
      ivy
      better-defaults
      ;; github
@@ -66,7 +65,7 @@ values."
      deft
      markdown
      org
-     gpu
+     shaders
      yaml
      react
      (python :variables
@@ -104,7 +103,7 @@ values."
                     highlight-indentation vi-tilde-fringe eyebrowse
                     org-bullets smooth-scrolling org-repo-todo org-download org-timer
                     livid-mode git-gutter git-gutter-fringe  evil-escape
-                    leuven-theme gh-md evil-lisp-state spray lorem-ipsum symon
+                    leuven-theme gh-md evil-lisp-state spray lorem-ipsum
                     ac-ispell ace-jump-mode auto-complete auto-dictionary
                     clang-format define-word google-translate disaster epic
                     fancy-battery org-present orgit orglue spacemacs-theme
@@ -117,6 +116,7 @@ values."
    dotspacemacs-install-packages 'used-only
    dotspacemacs-delete-orphan-packages t))
 
+;;*
 (defun dotspacemacs/init ()
   "Initialization function.
 This function is called at the very startup of Spacemacs initialization
@@ -175,17 +175,19 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(solarized-light
-                         solarized-dark)
+   dotspacemacs-themes '(spacemacs-light
+                         spacemacs-dark
+                         solarized-dark
+                         solarized-light)
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
    dotspacemacs-default-font '("Source Code Pro"
-                               :size 14
+                               :size 12
                                :weight normal
                                :width normal
-                               :powerline-scale 1.1)
+                               :powerline-scale 1.0)
    ;; The leader key
    dotspacemacs-leader-key "SPC"
    ;; The key used for Emacs commands (M-x) (after pressing on the leader key).
@@ -304,7 +306,7 @@ values."
    ;; If non nil line numbers are turned on in all `prog-mode' and `text-mode'
    ;; derivatives. If set to `relative', also turns on relative line numbers.
    ;; (default nil)
-   dotspacemacs-line-numbers nil
+   dotspacemacs-line-numbers t 
    ;; Code folding method. Possible values are `evil' and `origami'.
    ;; (default 'evil)
    dotspacemacs-folding-method 'origami
@@ -340,23 +342,23 @@ values."
 
 (defun dotspacemacs/user-init ()
   (setq configuration-layer--elpa-archives
-        '(("melpa-cn" . "https://elpa.zilongshanren.com/melpa/")
-          ("org-cn"   . "https://elpa.zilongshanren.com/org/")
-          ("gnu-cn"   . "https://elpa.zilongshanren.com/gnu/")))
+        '(("melpa-cn" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
+          ("gnu-cn" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
+          ("org-cn" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/org/"))))
 
-  ;; https://github.com/syl20bnr/spacemacs/issues/2705
-  ;; (setq tramp-mode nil)
-  (setq tramp-ssh-controlmaster-options
-        "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
+;; https://github.com/syl20bnr/spacemacs/issues/2705
+;; (setq tramp-mode nil)
+(setq tramp-ssh-controlmaster-options
+      "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
 
-  ;; ss proxy. But it will cause anacond-mode failed.
-  (setq socks-server '("Default server" "127.0.0.1" 1080 5))
-  (setq evil-shift-round nil)
-  (setq byte-compile-warnings '(not obsolete))
-  (setq warning-minimum-level :error)
-  ;; hack for remove purpose mode
-  (setq purpose-mode nil)
-  )
+;; ss proxy. But it will cause anacond-mode failed.
+(setq socks-server '("Default server" "127.0.0.1" 1080 5))
+(setq evil-shift-round nil)
+(setq byte-compile-warnings '(not obsolete))
+(setq warning-minimum-level :error)
+;; hack for remove purpose mode
+(setq purpose-mode nil)
+
 
 (defun dotspacemacs/user-config ()
   ;;解决org表格里面中英文对齐的问题
@@ -379,7 +381,12 @@ values."
   ;; force horizontal split window
   (setq split-width-threshold 120)
   (linum-relative-on)
-
+  (defun list-funcs (arg)
+    "List functions in buffer."
+    (interactive "p")
+    (message "functions")
+;;;  (list-matching-lines "^\\bstatic\\b*\\binline\\b*[ ]*[A-Za-z_<>]+[ ]+[A-Za-z0-9_:]+[\(]"))
+    (list-matching-lines "^[A-Za-z0-9_]+[ ]+[A-Za-z0-9_<>: ]*[\(]"))
   (spacemacs|add-company-backends :modes text-mode)
 
   (add-hook 'doc-view-mode-hook 'auto-revert-mode)
@@ -446,8 +453,7 @@ values."
                           (let ((projectile-completion-system 'ivy)
                                 (old-default-directory default-directory))
                             (projectile-switch-project-by-name project)
-                            (setq default-directory old-default-directory))))))
-  )
+                            (setq default-directory old-default-directory)))))))
 
 (setq custom-file (expand-file-name "custom.el" dotspacemacs-directory))
 (load custom-file 'no-error 'no-message)
@@ -456,4 +462,4 @@ values."
 This is an auto-generated function, do not modify its content directly, use
 Emacs customize menu instead.
 This function is called at the very end of Spacemacs initialization."
-)
+  )
